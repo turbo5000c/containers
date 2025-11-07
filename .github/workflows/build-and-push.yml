@@ -29,7 +29,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -44,14 +44,6 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      # ---- OPTIONAL: login to Docker Hub ----
-      - name: Login to Docker Hub
-        if: ${{ env.PUBLISH_DOCKERHUB == 'true' }}
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       # ---- Image metadata: tags, labels, sha, version tags ----
       - name: Docker metadata
@@ -94,7 +86,7 @@ jobs:
         with:
           context: ./bitwarden-cli       # ✅ updated build context
           file: ./bitwarden-cli/Dockerfile   # ✅ updated Dockerfile path
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           provenance: false
           sbom: false
