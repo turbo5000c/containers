@@ -17,8 +17,8 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
   # ✅ NEW: publish to a nested path
-  # ghcr.io/<owner>/bitwarden-cli/<repo>
-  FULL_IMAGE_PATH: ${{ env.REGISTRY }}/bitwarden-cli/${{ env.IMAGE_NAME }}
+  # ghcr.io/<owner>/<repo>/bitwarden-cli
+  FULL_IMAGE_PATH: ghcr.io/${{ github.repository }}/bitwarden-cli
 
   # Docker Hub optional
   PUBLISH_DOCKERHUB: 'false'
