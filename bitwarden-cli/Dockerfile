@@ -7,7 +7,7 @@ ARG BW_CLI_VERSION=2025.10.0
 ARG TARGETARCH
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends ca-certificates curl unzip \
+ && apt-get install -y --no-install-recommends ca-certificates wget curl unzip \
  && rm -rf /var/lib/apt/lists/*
 
 # Map Docker's TARGETARCH -> Bitwarden's asset suffix
