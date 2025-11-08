@@ -12,5 +12,5 @@ RUN apt update && \
     rm -rfv *.zip
 
 COPY entrypoint.sh /
-
+RUN chmod +x entrypoint.sh
 CMD ["/entrypoint.sh"]
