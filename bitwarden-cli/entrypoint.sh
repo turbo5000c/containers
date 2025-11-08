@@ -29,7 +29,7 @@ else
 fi
 
 # Ensure session is valid
-bw unlock --check >/dev/null
+bw unlock --check
 
 echo "Starting bw serve on 0.0.0.0:8087"
 # 'bw serve' has no built-in auth; restrict network access at the platform level!
