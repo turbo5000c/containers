@@ -30,3 +30,7 @@ RUN set -eux; \
 # (Optional) Only check version on native amd64 builds;
 # running foreign-arch binaries during multi-arch builds can be flaky.
 RUN if [ "${TARGETARCH}" = "amd64" ]; then /usr/local/bin/bw --version; else echo "Skipping --version on ${TARGETARCH}"; fi
+
+COPY entrypoint.sh /
+
+CMD ["/entrypoint.sh"]
