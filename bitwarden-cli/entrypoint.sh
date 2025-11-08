@@ -1,36 +1,19 @@
-#!/bin/bash
-set -euo pipefail
+#!/usr/bin/env bash
 
-: "${BW_HOST:?BW_HOST is required (e.g., https://vault.bitwarden.com)}"
-bw config server "${BW_HOST}"
+set -e
 
-login_with_apikey() {
-  echo "Logging in using API key"
-  export BW_CLIENTID BW_CLIENTSECRET
-  # bw login --apikey returns a token to stdout; --raw suppresses extra messages
-  local login_token
-  login_token="$(bw login --apikey --raw)"
-  export BW_SESSION
-  # Unlock with org/user password passed via env var (no echo)
-  BW_SESSION="$(BW_PASSWORD="${BW_PASSWORD:?missing}" bw unlock --raw)"
-}
+bw config server ${BW_HOST}
 
-login_with_user() {
-  echo "Logging in using username/password"
-  : "${BW_USER:?BW_USER required when no API key is set}"
-  export BW_SESSION
-  BW_SESSION="$(BW_PASSWORD="${BW_PASSWORD:?missing}" bw login "${BW_USER}" --raw)"
-}
-
-if [[ -n "${BW_CLIENTID:-}" && -n "${BW_CLIENTSECRET:-}" ]]; then
-  login_with_apikey
+if [ -n "$BW_CLIENTID" ] && [ -n "$BW_CLIENTSECRET" ]; then
+    echo "Using apikey to log in"
+    bw login --apikey --raw
+    export BW_SESSION=$(bw unlock --passwordenv BW_PASSWORD --raw)
 else
-  login_with_user
+    echo "Using username and password to log in"
+    export BW_SESSION=$(bw login ${BW_USER} --passwordenv BW_PASSWORD --raw)
 fi
 
-# Ensure session is valid
-bw unlock --check >/dev/null
+bw unlock --check
 
-echo "Starting bw serve on 0.0.0.0:8087"
-# 'bw serve' has no built-in auth; restrict network access at the platform level!
-exec bw serve --hostname 0.0.0.0 --port 8087
+echo 'Running `bw server` on port 8087'
+bw serve --hostname 0.0.0.0 #--disable-origin-protection
